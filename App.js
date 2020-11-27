@@ -10,12 +10,6 @@ export default function App() {
   const [discount , setDiscount]= useState("");
   const [check, setCheck]=useState(2);
   
-
-  /*const DismissKeyboard = ({ children }) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {children}
-    </TouchableWithoutFeedback>
-  );*/
   useEffect(()=>{
     setCheck(0);
   }, []);
@@ -55,9 +49,9 @@ export default function App() {
            onChangeText={(discount)=>setDiscount(discount)} value={discount} onEndEditing={Calculate} placeholder="Enter discount offered"></TextInput>
           <View style={{alignItems:"center", justifyContent: "center", marginTop:70}}>
           <Text style={[styles.textStyle, {fontSize:30}]}>You Save </Text>
-          <Text style={{fontSize:25, textAlign:"center", marginTop:10, marginBottom:10, fontWeight:"bold"}}>{enteredPrice==="" || discount===""? "--":save}</Text>
+          <Text style={styles.resultText}>{enteredPrice==="" || discount===""? "--":save}</Text>
           <Text style={[styles.textStyle, {fontSize:30}]}>Final Price </Text>
-          <Text style={{fontSize:25, textAlign:"center", marginTop:10, marginBottom:10, fontWeight: "bold"}}>{enteredPrice===""  || discount===""? "--":finalPrice}</Text>
+          <Text style={styles.resultText}>{enteredPrice===""  || discount===""? "--":finalPrice}</Text>
           </View>
        </View>
        
@@ -86,5 +80,6 @@ const styles = StyleSheet.create({
   },
   inputBox:{
     width:"80%", height:40,borderColor:"#05375a", borderWidth: 2, borderTopWidth:0, borderLeftColor:0, borderRightWidth:0, marginBottom:20, fontSize:20, marginTop:4
-  }
+  },
+  resultText:{fontSize:25, textAlign:"center", marginTop:10, marginBottom:10, fontWeight:"bold"}
 });
