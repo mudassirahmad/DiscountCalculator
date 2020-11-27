@@ -1,34 +1,69 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
+import React, { useState , Component, useEffect} from 'react';
+import {  StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 
 export default function App() {
 
-  const [value, onChangeText] = React.useState('Useless Placeholder');
-  const DismissKeyboard = ({ children }) => (
+  const [save, setSave] = useState();
+  const [finalPrice, setFinalPrice]= useState();
+  const [enteredPrice, setEnterdPrice]= useState("");
+  const [discount , setDiscount]= useState("");
+  const [check, setCheck]=useState(2);
+  
+
+  /*const DismissKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       {children}
     </TouchableWithoutFeedback>
-  );
+  );*/
+  useEffect(()=>{
+    setCheck(0);
+  }, []);
 
+  function Calculate(){
+    var disc= parseFloat(discount);
+    var price= parseFloat(enteredPrice);
+    if(disc>100){ 
+      Alert.alert("invalid number", "Discount value must be less than equal to 100");
+      setDiscount("");
+      return;
+    }
+    if(enteredPrice!=="" && discount!==""){
+      var calc=(price*disc)/100;
+      setSave(calc.toFixed(2));
+      var difference= price - calc;
+      setFinalPrice(difference.toFixed(2));
+      setCheck(1);
+    }
+  }
 
   return (
-    <DismissKeyboard>
-
     
     <View style={styles.container}>
        <View style={styles.header}>
          <Text style={styles.headerText}>Discount Calculator</Text>
        </View>
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
        <View style={[styles.footer, ]}>
           <Text style={styles.textStyle}>Original Price:</Text>
-            <TextInput keyboardType="numeric" onSubmitEditing={Keyboard.dismiss} style={styles.inputBox } placeholder="Enter total amount"></TextInput>
-              
+          <View>
+            <TextInput keyboardType="numeric"  style={styles.inputBox}  onChangeText={(enteredPrice)=>setEnterdPrice(enteredPrice)} value={enteredPrice} onEndEditing={Calculate}  placeholder="Enter total amount"></TextInput>
+            
+          </View>
           <Text style={[styles.textStyle]}>Discount Percentage:</Text>
-          <TextInput keyboardType="numeric" onSubmitEditing={Keyboard.dismiss} style={styles.inputBox } placeholder="Enter discount offered"></TextInput>
+          <TextInput keyboardType="numeric" style={styles.inputBox } 
+           onChangeText={(discount)=>setDiscount(discount)} value={discount} onEndEditing={Calculate} placeholder="Enter discount offered"></TextInput>
+          <View style={{alignItems:"center", justifyContent: "center", marginTop:70}}>
+          <Text style={[styles.textStyle, {fontSize:30}]}>You Save </Text>
+          <Text style={{fontSize:25, textAlign:"center", marginTop:10, marginBottom:10, fontWeight:"bold"}}>{enteredPrice==="" || discount===""? "--":save}</Text>
+          <Text style={[styles.textStyle, {fontSize:30}]}>Final Price </Text>
+          <Text style={{fontSize:25, textAlign:"center", marginTop:10, marginBottom:10, fontWeight: "bold"}}>{enteredPrice===""  || discount===""? "--":finalPrice}</Text>
+          </View>
        </View>
+       
+    </TouchableWithoutFeedback>
+    
     </View>
-    </DismissKeyboard>
   );
 }
 
