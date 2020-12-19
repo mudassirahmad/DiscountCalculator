@@ -17,6 +17,8 @@ function screen({ navigation , route}){
   const [displayD, setDisplayD] = useState("");
   const [displayOp, serDisplayOp] = useState("");
 
+
+  //whenever the value save in list of record it updates the values that will be displayed on history screen
   useEffect(()=>{
     var valuesfp = "";
     var valuesOp = "";
@@ -44,13 +46,15 @@ function screen({ navigation , route}){
     
   },[record]);
 
+
+  //set record array to the array return from the history screen
   useEffect(()=>{
     if(route.params?.returnArray){
       setRecord(route.params.returnArray);
       navigation.setParams({returnArray: undefined});
     }
   });
-
+//check if disocunt value is greater than zero or not
   useEffect(()=>{
     var disc = parseFloat(discount);
     var price = parseFloat(enteredPrice);
@@ -67,13 +71,15 @@ function screen({ navigation , route}){
     
     }
   },[discount,enteredPrice])
+
+  //check if both fields i.e. Discount and Entered Price is filled or not if both are filled than enable the save button
   useEffect(()=>{
     if(discount!=="" && enteredPrice!==""){
       setcheckFields(false);
     }
   },[discount, enteredPrice])
 
-
+// updates value in list of history
   function saveRecord() {
 
     var finalP = finalPrice.toString();
@@ -90,6 +96,7 @@ function screen({ navigation , route}){
   return (
 
     <KeyboardAvoidingView
+    /* used these because in android when keyboard was popping up screen moves up and collide with other elements, so in order to avoid I used these behaviour and enabled*/
     behavior={Platform.OS == "ios" ? "padding" : "height"}
     enabled={Platform.OS === "ios" ? false : false}
     style={styles.container} >
@@ -97,6 +104,8 @@ function screen({ navigation , route}){
       <View style={styles.header}>
         <Text style={styles.headerText}>Discount Calculator</Text>
       </View>
+
+      {/* this will hide the keyboard when user taps anywhere on the screen*/}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         
         <View style={[styles.footer,]}>
@@ -124,7 +133,7 @@ function screen({ navigation , route}){
             <TouchableOpacity onPress={() => {saveRecord(); setcheckFields(true); }} disabled={checkFields} style={styles.buttonStyle}>
               <Text style={styles.buttonTextStyle}>Save</Text>
             </TouchableOpacity>
-            
+            {/*when navigating to the other screen we pass history list and 3 values Discount, Original Price, and Final Price string that will be displayed in history screen */}
             <TouchableOpacity style={styles.buttonStyle}  onPress={() => { setDiscount("");setEnterdPrice("");navigation.navigate('History', {priceList: record, fp:displayfp,
             Op:displayOp, D:displayD})}}>
               <View>
@@ -150,6 +159,8 @@ function History({ navigation, route }){
   const [OP,setOP]=useState(route.params.Op);
   const [Disc,setD]=useState(route.params.D);
   var [history, setHistory] = useState(priceFromHome);
+
+  //clear history button function that clear all the history
   function deleteHistory(){
     setHistory([]);
     setOP("");
